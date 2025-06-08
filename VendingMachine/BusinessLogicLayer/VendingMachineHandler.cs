@@ -11,9 +11,6 @@ namespace VendingMachineApp
         private readonly IChangeDispenser _changeDispenser;
         private readonly IVendingMachineDisplay _display;
         private readonly IProductHandler _state;
-        private string _transientDisplayMessage = string.Empty;
-        private DateTime _transientMessageTimestamp;
-        private const int TransientMessageDurationSeconds = 3;
         public VendingMachine(ICoinProcessor coinProcessor, IProductDispenser productDispenser, IChangeDispenser changeDispenser, IVendingMachineDisplay display, IProductHandler state)
         {
             _coinProcessor = coinProcessor ?? throw new ArgumentNullException(nameof(coinProcessor));
@@ -72,28 +69,17 @@ namespace VendingMachineApp
         }
         public void DisplayCurrentStatus()
         {
-            if (!string.IsNullOrEmpty(_transientDisplayMessage) && (DateTime.Now - _transientMessageTimestamp).TotalSeconds < TransientMessageDurationSeconds)
+            if (_state.CurrentAmount == 0.00m)
             {
-                _display.ShowMessage(_transientDisplayMessage);
+                _display.ShowMessage("INSERT COIN");
             }
             else
             {
-                _transientDisplayMessage = string.Empty;
-                if (_state.CurrentAmount == 0.00m)
-                {
-                    _display.ShowMessage("INSERT COIN");
-                }
-                else
-                {
-                    _display.ShowCurrentAmount(_state.CurrentAmount);
-                }
+                _display.ShowCurrentAmount(_state.CurrentAmount);
             }
+
         }
-        private void SetTransientDisplayMessage(string message)
-        {
-            _transientDisplayMessage = message;
-            _transientMessageTimestamp = DateTime.Now;
-        }
+
         private void HandleCoinInsertion(string coinType)
         {
             Coin processedCoin = _coinProcessor.ProcessInsertedCoin(coinType);
@@ -107,7 +93,7 @@ namespace VendingMachineApp
         {
             if (!_state.GetAllProducts().ContainsKey(productName))
             {
-                SetTransientDisplayMessage($"INVALID PRODUCT");
+                Console.WriteLine($"INVALID PRODUCT");
                 Console.WriteLine($"Product '{productName}' does not exist.");
                 return;
             }
@@ -122,11 +108,11 @@ namespace VendingMachineApp
                 _state.DeductAmount(price);
                 _changeDispenser.DispenseChange(change);
                 _state.ResetAmount();
-                SetTransientDisplayMessage("THANK YOU");
+                Console.WriteLine("THANK YOU");
             }
             else
             {
-                SetTransientDisplayMessage($"PRICE ${price:F2}");
+                Console.WriteLine($"PRICE ${price:F2}");
                 Console.WriteLine($"Not enough money for {productName}. Price: ${price:F2}. Current: ${_state.CurrentAmount:F2}.");
             }
         }
@@ -142,7 +128,7 @@ namespace VendingMachineApp
                 Console.WriteLine("No coins to return.");
             }
         }
-        public void SimulateInput(string input)
+        public void ProcessInput(string input)
         {
             if (input.StartsWith("insert "))
             {
