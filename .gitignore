@@ -1,0 +1,76 @@
+# Visual Studio Code of conduct - https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
+
+# User-specific files
+*.suo
+*.user
+*.userosf
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Tt]emp/
+[Rr]esharper/[Tt]emp/
+[Dd]ata/
+*.exe
+*.dll
+*.pdb
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+*.buildscc
+*.deploy
+*.bak
+*.resharper
+*.dotcover
+
+# Visual Studio folders
+.vs/ # This is the main VS solution folder to ignore
+
+# NuGet packages
+packages/
+*.nupkg
+*.snupkg
+*.cache
+*.props
+*.targets
+
+# xUnit test files
+TestResults/
+.trx
+
+# Rider (JetBrains IDE)
+.idea/
+
+# DotNet tools specific
+.config/
+.msbuild/
+.vs/
+
+# Other common ignored files
+*.cache
+*.opendb
+*.sdf
+*.vshost.*
+*.aps
+*.manifest
+*.webinfo
+*.lic
+*.scc
+*.vsix
+*.swp # vim swap files
+*~ # backup files
+# Thumbs.db # Windows thumbnails
+# .DS_Store # macOS specific
+
+# Specific to your project
+# If your products.json is dynamically written by the app at runtime
+# or if you want to store it outside of version control, uncomment this:
+# products.json
+
+# If you create test outputs or logs that should not be tracked
+# my_test_output.txt
+# application_logs/
